@@ -73,38 +73,46 @@
 
   <script>
 
+  (function () {
+    const secHand = document.querySelector('.second-hand');
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+
     let sec = new Date().getSeconds();
     let secDeg = (sec * 6) + 90;
-    setInterval(() => {
+
+    function getSeconds() {
       secDeg += 6;
-      document.querySelector('.second-hand').style.transform = 'rotate(' + secDeg + 'deg)';
-    }, 1000);
-
-    let min = new Date().getMinutes();
-    console.log(min);
-    let minDeg = (min * 6) + 90;
-    setInterval(() => {
-      minDeg += 0.1;
-      document.querySelector('.min-hand').style.transform = 'rotate(' + minDeg + 'deg)';
-    }, 1000);
-
-    let partialHour = (minDeg - 90) / 6;
-    let partialHourDegrees =  (partialHour / 60) * 30;
-    console.log(partialHourDegrees);
-    let hour = new Date().getHours();
-    if (hour > 12) { hour -= 12; }
-    let hourDeg = (hour * 30) + 90 + partialHourDegrees;
-
-    {
-      hourDeg += 0.1;
-      document.querySelector('.hour-hand').style.transform = 'rotate(' + hourDeg + 'deg)';
+      secHand.style.transform = `rotate(${secDeg}deg)`;
     }
 
-    setInterval(() => {
-      Math.ceil(hourDeg += 0.1); // not working
-      document.querySelector('.hour-hand').style.transform = 'rotate(' + hourDeg + 'deg)';
-    }, 60000);
+    let min = new Date().getMinutes();
+    let minDeg = (min * 6) + 90;
 
+    function getMinutes() {
+      minDeg += 0.1;
+      minHand.style.transform = `rotate(${minDeg}deg)`;
+    }
+
+    let hour = new Date().getHours();
+    if (hour > 12) { hour -= 12; }
+
+    function getHours() {
+      let partialHour = (minDeg - 90) / 6;
+      let partialHourDegrees =  (partialHour / 60) * 30;
+      let hourDeg = (hour * 30) + 90 + partialHourDegrees;
+      hourDeg += 0.1; // not working
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    }
+
+    getSeconds();
+    getMinutes();
+    getHours();
+    
+    setInterval(getSeconds, 1000);
+    setInterval(getMinutes, 1000);
+    setInterval(getHours, 60000);
+  })();
   </script>
 </body>
 </html>
